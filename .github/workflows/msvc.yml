@@ -20,7 +20,12 @@ permissions:
 
 jobs:
   build:
-    runs-on: windows-2022
+    strategy:
+        matrix:
+          os: [windows-2022]
+          arch: [x86, x64]
+
+    runs-on: ${{ matrix.os }}
 
     steps:
     - uses: actions/checkout@v3
@@ -39,4 +44,4 @@ jobs:
       working-directory: ${{env.GITHUB_WORKSPACE}}
       # Add additional options to the MSBuild command line here (like platform or verbosity level).
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
-      run: msbuild nssm.vcxproj /m /p:Configuration=${{env.BUILD_CONFIGURATION}}
+      run: msbuild nssm.vcxproj /m /p:Configuration=${{env.BUILD_CONFIGURATION}} /p:Platform=${{ matrix.arch }}
