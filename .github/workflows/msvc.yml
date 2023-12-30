@@ -52,3 +52,14 @@ jobs:
         name: nssm-${{ matrix.arch }}
         path: ${{ github.workspace }}/out/Release/**/nssm.exe
         retention-days: 7
+
+    - name: Post comment
+      uses: actions/github-script@v7
+      with:
+        script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '👋  A new build is available for this PR based on ${{ github.event.pull_request.head.sha }}.\n * [Download here.](https://github.com/kryskool/nssm/actions/runs/${{ github.run_id }})'
+            })
